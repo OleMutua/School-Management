@@ -1,8 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
     defaultConfig {
         applicationId "com.ancent.schmgmt"
         minSdkVersion 15
@@ -10,10 +18,65 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //Set jack options
+        jackOptions {
+            enabled true //Enable jack
+            jackInProcess true //Allow instant run with jack
+        }
+    }
+
+    productFlavors {
+        lecturer {
+            applicationIdSuffix '.lecturer'
+        }
+
+        student {
+            applicationIdSuffix '.student'
+        }
+    }
+
+    sourceSets {
+        lecturer {
+            java.srcDirs 'src/lecturer/java'
+            res.srcDirs 'src/lecturer/res'
+            manifest.srcFile 'src/lecturer/AndroidManifest.xml'
+        }
+        student {
+            java.srcDirs 'src/student/java'
+            res.srcDirs 'src/student/res'
+            manifest.srcFile 'src/student/AndroidManifest.xml'
+        }
+    }
+
+    signingConfigs {
+        engineering {
+            keyAlias 'AncentSchoolManagement'
+            keyPassword '1SchMgmt^2016'
+            storePassword '1SchMgmt^2016'
+            storeFile file('release.jks')
+        }
+        production {
+            keyAlias 'AncentSchoolManagement'
+            keyPassword '1SchMgmt^2016'
+            storePassword '1SchMgmt^2016'
+            storeFile file('release.jks')
+        }
+
     }
     buildTypes {
-        release {
+        debug {
+            debuggable true
             minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.engineering
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            debuggable false
+            minifyEnabled false
+            shrinkResources true
+            signingConfig signingConfigs.production
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
